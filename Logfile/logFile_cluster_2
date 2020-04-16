@@ -1,0 +1,59 @@
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_7//
+DEBUG:root:Time taken for Data Selection: 3.541498311360677 min
+DEBUG:root:Average silhouette score for 3 cluster : 0.08117625964455798
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.017801872889200845 min
+DEBUG:root:Total Time taken: 3.565287204583486 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_8//
+DEBUG:root:Time taken for Data Selection: 3.456971331437429 min
+DEBUG:root:Average silhouette score for 4 cluster : 0.06683165914042218
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.014359994729359945 min
+DEBUG:root:Total Time taken: 3.4774477005004885 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_9//
+DEBUG:root:Time taken for Data Selection: 3.4011897325515745 min
+DEBUG:root:Average silhouette score for 5 cluster : 0.07608202565679044
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.014277923107147216 min
+DEBUG:root:Total Time taken: 3.423325769106547 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_10//
+DEBUG:root:Time taken for Data Selection: 3.4823846141497294 min
+DEBUG:root:Average silhouette score for 6 cluster : 0.07376878443648713
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.014138627052307128 min
+DEBUG:root:Total Time taken: 3.506151823202769 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_11//
+DEBUG:root:Time taken for Data Selection: 3.408052718639374 min
+DEBUG:root:Average silhouette score for 7 cluster : 0.07816627788168733
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.014194798469543458 min
+DEBUG:root:Total Time taken: 3.4326210141181948 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_12//
+DEBUG:root:Time taken for Data Selection: 3.4499713659286497 min
+DEBUG:root:Average silhouette score for 8 cluster : 0.07876707351613291
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.015061775843302408 min
+DEBUG:root:Total Time taken: 3.475230546792348 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//19H//agglo//Test_13//
+DEBUG:root:Time taken for Data Selection: 3.4894042452176413 min
+DEBUG:root:Average silhouette score for 9 cluster : 0.06112578695948607
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.014334448178609212 min
+DEBUG:root:Total Time taken: 3.516815193494161 min
+
+DEBUG:root:Path for this Test Case:- ..//..//AllFrequencies//ATL//91V//agglo//Test_11//
+DEBUG:root:Time taken for Data Selection: 4.093009666601817 min
+DEBUG:root:Average silhouette score for 7 cluster : 0.03434376929819549
+DEBUG:root:Max Iteration: 0
+DEBUG:root:Time taken by Clustering Algorithm: 0.013500853379567464 min
+DEBUG:root:Total Time taken: 4.1192339062690735 min
+
+DEBUG:matplotlib:CACHEDIR=C:\Users\Dhrumil\.matplotlib
+DEBUG:matplotlib.font_manager:Using fontManager instance from C:\Users\Dhrumil\.matplotlib\fontlist-v300.json
+DEBUG:matplotlib.pyplot:Loaded backend module://ipykernel.pylab.backend_inline version unknown.

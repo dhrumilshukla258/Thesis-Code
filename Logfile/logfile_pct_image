@@ -1,0 +1,348 @@
+DEBUG:root:Images for ATL region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	30 images took 7.478471517562866 seconds for 5 year
+DEBUG:root:	8 images took 1.4549453258514404 seconds for 6 year
+DEBUG:root:	28 images took 5.053802967071533 seconds for 7 year
+DEBUG:root:	148 images took 23.045777320861816 seconds for 8 year
+DEBUG:root:	92 images took 15.19300365447998 seconds for 9 year
+DEBUG:root:	556 images took 1.4342681368192036 minute for 10 year
+DEBUG:root:	537 images took 1.3333492477734883 minute for 11 year
+DEBUG:root:	678 images took 1.6768424232800803 minute for 12 year
+DEBUG:root:	238 images took 35.877010107040405 seconds for 13 year
+DEBUG:root:	229 images took 34.29310846328735 seconds for 14 year
+DEBUG:root:	411 images took 1.0534934639930724 minute for 15 year
+DEBUG:root:	597 images took 1.4583026051521302 minute for 16 year
+DEBUG:root:	592 images took 1.4655028263727823 minute for 17 year
+DEBUG:root:	697 images took 1.6682520389556885 minute for 18 year
+DEBUG:root:	518 images took 1.2658357977867127 minute for 19 year
+DEBUG:root:Time taken for ATL region and 19 freq: 13.395798444747925 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	30 images took 3.6925785541534424 seconds for 5 year
+DEBUG:root:	8 images took 0.9366796016693115 seconds for 6 year
+DEBUG:root:	28 images took 3.57188081741333 seconds for 7 year
+DEBUG:root:	148 images took 18.39417576789856 seconds for 8 year
+DEBUG:root:	92 images took 11.459169626235962 seconds for 9 year
+DEBUG:root:	556 images took 1.1482030510902406 minute for 10 year
+DEBUG:root:	540 images took 1.119552763303121 minute for 11 year
+DEBUG:root:	678 images took 1.4011051615079244 minute for 12 year
+DEBUG:root:	237 images took 29.894251346588135 seconds for 13 year
+DEBUG:root:	232 images took 29.699090242385864 seconds for 14 year
+DEBUG:root:	413 images took 52.27805972099304 seconds for 15 year
+DEBUG:root:	431 images took 53.2612988948822 seconds for 16 year
+DEBUG:root:	395 images took 49.11384987831116 seconds for 17 year
+DEBUG:root:	453 images took 56.10135817527771 seconds for 18 year
+DEBUG:root:	343 images took 42.70241570472717 seconds for 19 year
+DEBUG:root:Time taken for ATL region and 37 freq: 9.520640973250071 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	30 images took 4.351745128631592 seconds for 5 year
+DEBUG:root:	8 images took 1.034759283065796 seconds for 6 year
+DEBUG:root:	28 images took 4.215120553970337 seconds for 7 year
+DEBUG:root:	145 images took 20.937426328659058 seconds for 8 year
+DEBUG:root:	91 images took 13.172794103622437 seconds for 9 year
+DEBUG:root:	554 images took 1.3386972705523172 minute for 10 year
+DEBUG:root:	538 images took 1.2978026588757834 minute for 11 year
+DEBUG:root:	670 images took 1.6172422806421916 minute for 12 year
+DEBUG:root:	236 images took 34.170403480529785 seconds for 13 year
+DEBUG:root:	231 images took 33.36675548553467 seconds for 14 year
+DEBUG:root:	409 images took 59.39270544052124 seconds for 15 year
+DEBUG:root:	599 images took 1.4237937172253927 minute for 16 year
+DEBUG:root:	601 images took 1.4398266553878785 minute for 17 year
+DEBUG:root:	709 images took 1.6824536204338074 minute for 18 year
+DEBUG:root:	536 images took 1.2564157287279765 minute for 19 year
+DEBUG:root:Time taken for ATL region and 91 freq: 12.90029368797938 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for ATL region: 35.81673310597738 minute
+DEBUG:root:=========================================================================
+
+DEBUG:root:Images for CPAC region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	2 images took 0.38874340057373047 seconds for 6 year
+DEBUG:root:	1 images took 0.2449479103088379 seconds for 9 year
+DEBUG:root:	2 images took 0.36333441734313965 seconds for 10 year
+DEBUG:root:	59 images took 9.539030313491821 seconds for 13 year
+DEBUG:root:	68 images took 10.85445237159729 seconds for 14 year
+DEBUG:root:	360 images took 1.0255014419555664 minute for 15 year
+DEBUG:root:	40 images took 6.670181035995483 seconds for 16 year
+DEBUG:root:	63 images took 9.934453010559082 seconds for 18 year
+DEBUG:root:	17 images took 2.703044891357422 seconds for 19 year
+DEBUG:root:Time taken for CPAC region and 19 freq: 1.7038211901982625 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	2 images took 0.26985931396484375 seconds for 6 year
+DEBUG:root:	1 images took 0.1387009620666504 seconds for 9 year
+DEBUG:root:	2 images took 0.2520430088043213 seconds for 10 year
+DEBUG:root:	59 images took 7.778753280639648 seconds for 13 year
+DEBUG:root:	69 images took 8.922929763793945 seconds for 14 year
+DEBUG:root:	381 images took 51.57437467575073 seconds for 15 year
+DEBUG:root:	41 images took 5.400438070297241 seconds for 16 year
+DEBUG:root:	39 images took 4.916194200515747 seconds for 18 year
+DEBUG:root:	13 images took 1.742546558380127 seconds for 19 year
+DEBUG:root:Time taken for CPAC region and 37 freq: 1.349963903427124 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	2 images took 0.3566935062408447 seconds for 6 year
+DEBUG:root:	1 images took 0.17383289337158203 seconds for 9 year
+DEBUG:root:	2 images took 0.29015254974365234 seconds for 10 year
+DEBUG:root:	59 images took 9.387006282806396 seconds for 13 year
+DEBUG:root:	69 images took 10.660557508468628 seconds for 14 year
+DEBUG:root:	378 images took 56.62005138397217 seconds for 15 year
+DEBUG:root:	42 images took 6.536317586898804 seconds for 16 year
+DEBUG:root:	62 images took 9.285708904266357 seconds for 18 year
+DEBUG:root:	17 images took 2.6345267295837402 seconds for 19 year
+DEBUG:root:Time taken for CPAC region and 91 freq: 1.599080789089203 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for CPAC region: 4.6528824210166935 minute
+DEBUG:root:=========================================================================
+
+DEBUG:root:Images for EPAC region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	115 images took 20.648003578186035 seconds for 6 year
+DEBUG:root:	82 images took 13.312567234039307 seconds for 7 year
+DEBUG:root:	184 images took 30.065585136413574 seconds for 8 year
+DEBUG:root:	211 images took 38.557159185409546 seconds for 9 year
+DEBUG:root:	154 images took 26.1155104637146 seconds for 10 year
+DEBUG:root:	394 images took 1.1037940700848898 minute for 11 year
+DEBUG:root:	533 images took 1.4741502722104391 minute for 12 year
+DEBUG:root:	448 images took 1.2406822840372722 minute for 13 year
+DEBUG:root:	664 images took 1.7948080499966939 minute for 14 year
+DEBUG:root:	928 images took 2.5676857471466064 minute for 15 year
+DEBUG:root:	832 images took 2.2706154783566794 minute for 16 year
+DEBUG:root:	437 images took 1.1926161686579386 minute for 17 year
+DEBUG:root:	1138 images took 2.985862147808075 minute for 18 year
+DEBUG:root:	631 images took 1.7423364281654359 minute for 19 year
+DEBUG:root:Time taken for EPAC region and 19 freq: 18.51758092244466 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	117 images took 24.6341712474823 seconds for 6 year
+DEBUG:root:	82 images took 16.57536792755127 seconds for 7 year
+DEBUG:root:	184 images took 30.448028326034546 seconds for 8 year
+DEBUG:root:	211 images took 41.358619928359985 seconds for 9 year
+DEBUG:root:	155 images took 29.47750163078308 seconds for 10 year
+DEBUG:root:	394 images took 1.1122373263041179 minute for 11 year
+DEBUG:root:	534 images took 1.527222788333893 minute for 12 year
+DEBUG:root:	462 images took 1.285213327407837 minute for 13 year
+DEBUG:root:	668 images took 1.8341461102167764 minute for 14 year
+DEBUG:root:	1011 images took 2.7741711378097533 minute for 15 year
+DEBUG:root:	681 images took 1.862560248374939 minute for 16 year
+DEBUG:root:	277 images took 47.71700382232666 seconds for 17 year
+DEBUG:root:	765 images took 2.0833306988080342 minute for 18 year
+DEBUG:root:	420 images took 1.168321394920349 minute for 19 year
+DEBUG:root:Time taken for EPAC region and 37 freq: 16.81744789282481 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	116 images took 24.053292274475098 seconds for 6 year
+DEBUG:root:	81 images took 18.573908805847168 seconds for 7 year
+DEBUG:root:	179 images took 34.41285276412964 seconds for 8 year
+DEBUG:root:	207 images took 42.27603793144226 seconds for 9 year
+DEBUG:root:	156 images took 27.261368989944458 seconds for 10 year
+DEBUG:root:	390 images took 1.1270720402399699 minute for 11 year
+DEBUG:root:	527 images took 1.3955075899759928 minute for 12 year
+DEBUG:root:	456 images took 1.2072145183881124 minute for 13 year
+DEBUG:root:	667 images took 1.767342499891917 minute for 14 year
+DEBUG:root:	1009 images took 2.67880216439565 minute for 15 year
+DEBUG:root:	833 images took 2.606111741065979 minute for 16 year
+DEBUG:root:	441 images took 1.600562822818756 minute for 17 year
+DEBUG:root:	1149 images took 4.026458748181661 minute for 18 year
+DEBUG:root:	634 images took 2.165825418631236 minute for 19 year
+DEBUG:root:Time taken for EPAC region and 91 freq: 21.017855223019918 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for EPAC region: 56.35288403828939 minute
+DEBUG:root:=========================================================================
+
+DEBUG:root:Images for IO region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	10 images took 1.9739813804626465 seconds for 5 year
+DEBUG:root:	9 images took 3.4364399909973145 seconds for 6 year
+DEBUG:root:	18 images took 2.919682502746582 seconds for 7 year
+DEBUG:root:	39 images took 8.71849775314331 seconds for 8 year
+DEBUG:root:	10 images took 2.034752607345581 seconds for 9 year
+DEBUG:root:	54 images took 13.228172063827515 seconds for 10 year
+DEBUG:root:	59 images took 11.878510236740112 seconds for 11 year
+DEBUG:root:	21 images took 5.5787060260772705 seconds for 12 year
+DEBUG:root:	49 images took 10.719178199768066 seconds for 13 year
+DEBUG:root:	84 images took 17.765021085739136 seconds for 14 year
+DEBUG:root:	107 images took 21.5889949798584 seconds for 15 year
+DEBUG:root:	80 images took 17.91894221305847 seconds for 16 year
+DEBUG:root:	44 images took 10.952039957046509 seconds for 17 year
+DEBUG:root:	167 images took 31.76425337791443 seconds for 18 year
+DEBUG:root:	132 images took 25.972745895385742 seconds for 19 year
+DEBUG:root:Time taken for IO region and 19 freq: 3.1074986378351848 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	10 images took 1.3171184062957764 seconds for 5 year
+DEBUG:root:	9 images took 1.9612693786621094 seconds for 6 year
+DEBUG:root:	18 images took 2.3476433753967285 seconds for 7 year
+DEBUG:root:	39 images took 5.8373191356658936 seconds for 8 year
+DEBUG:root:	10 images took 1.4403619766235352 seconds for 9 year
+DEBUG:root:	54 images took 8.412923336029053 seconds for 10 year
+DEBUG:root:	60 images took 8.748124599456787 seconds for 11 year
+DEBUG:root:	21 images took 3.442340135574341 seconds for 12 year
+DEBUG:root:	49 images took 7.6192474365234375 seconds for 13 year
+DEBUG:root:	84 images took 12.123678922653198 seconds for 14 year
+DEBUG:root:	107 images took 15.490207433700562 seconds for 15 year
+DEBUG:root:	57 images took 8.251790761947632 seconds for 16 year
+DEBUG:root:	29 images took 4.2624592781066895 seconds for 17 year
+DEBUG:root:	108 images took 15.869175434112549 seconds for 18 year
+DEBUG:root:	86 images took 12.31802487373352 seconds for 19 year
+DEBUG:root:Time taken for IO region and 37 freq: 1.824044664700826 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	10 images took 1.5128889083862305 seconds for 5 year
+DEBUG:root:	9 images took 2.345458745956421 seconds for 6 year
+DEBUG:root:	18 images took 2.7626216411590576 seconds for 7 year
+DEBUG:root:	35 images took 5.785032510757446 seconds for 8 year
+DEBUG:root:	9 images took 1.5023157596588135 seconds for 9 year
+DEBUG:root:	54 images took 9.3359854221344 seconds for 10 year
+DEBUG:root:	60 images took 9.623029232025146 seconds for 11 year
+DEBUG:root:	20 images took 3.8011646270751953 seconds for 12 year
+DEBUG:root:	50 images took 8.472721338272095 seconds for 13 year
+DEBUG:root:	84 images took 13.49750804901123 seconds for 14 year
+DEBUG:root:	107 images took 17.997750997543335 seconds for 15 year
+DEBUG:root:	78 images took 12.691598415374756 seconds for 16 year
+DEBUG:root:	45 images took 7.984580993652344 seconds for 17 year
+DEBUG:root:	166 images took 26.418739318847656 seconds for 18 year
+DEBUG:root:	138 images took 23.06264853477478 seconds for 19 year
+DEBUG:root:Time taken for IO region and 91 freq: 2.446567408243815 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for IO region: 7.378110710779826 minute
+DEBUG:root:=========================================================================
+
+DEBUG:root:Images for SHEM region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	60 images took 10.65131950378418 seconds for 6 year
+DEBUG:root:	91 images took 17.77265191078186 seconds for 7 year
+DEBUG:root:	179 images took 31.733834743499756 seconds for 8 year
+DEBUG:root:	168 images took 30.749878883361816 seconds for 9 year
+DEBUG:root:	442 images took 1.3173573335011801 minute for 10 year
+DEBUG:root:	291 images took 56.310303926467896 seconds for 11 year
+DEBUG:root:	452 images took 1.4156682332356771 minute for 12 year
+DEBUG:root:	689 images took 2.0384084979693093 minute for 13 year
+DEBUG:root:	322 images took 58.742645502090454 seconds for 14 year
+DEBUG:root:	589 images took 1.8190268516540526 minute for 15 year
+DEBUG:root:	515 images took 1.5654490033785502 minute for 16 year
+DEBUG:root:	224 images took 46.533812522888184 seconds for 17 year
+DEBUG:root:	615 images took 1.918992801507314 minute for 18 year
+DEBUG:root:	1006 images took 2.9524216930071514 minute for 19 year
+DEBUG:root:Time taken for SHEM region and 19 freq: 17.23558190266291 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	60 images took 11.772814989089966 seconds for 6 year
+DEBUG:root:	92 images took 16.65933656692505 seconds for 7 year
+DEBUG:root:	180 images took 33.30792188644409 seconds for 8 year
+DEBUG:root:	168 images took 32.85343098640442 seconds for 9 year
+DEBUG:root:	445 images took 1.3146112521489461 minute for 10 year
+DEBUG:root:	303 images took 58.67181444168091 seconds for 11 year
+DEBUG:root:	470 images took 1.5031503319740296 minute for 12 year
+DEBUG:root:	697 images took 2.18559672832489 minute for 13 year
+DEBUG:root:	322 images took 1.0572352608044941 minute for 14 year
+DEBUG:root:	611 images took 1.838793933391571 minute for 15 year
+DEBUG:root:	513 images took 1.5655896266301472 minute for 16 year
+DEBUG:root:	148 images took 27.440431118011475 seconds for 17 year
+DEBUG:root:	417 images took 1.2881951332092285 minute for 18 year
+DEBUG:root:	678 images took 1.6999210874239603 minute for 19 year
+DEBUG:root:Time taken for SHEM region and 37 freq: 15.464905873934429 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	60 images took 8.948526620864868 seconds for 6 year
+DEBUG:root:	92 images took 13.975328207015991 seconds for 7 year
+DEBUG:root:	170 images took 24.999014139175415 seconds for 8 year
+DEBUG:root:	163 images took 23.515129566192627 seconds for 9 year
+DEBUG:root:	447 images took 1.1171475609143575 minute for 10 year
+DEBUG:root:	304 images took 46.34229755401611 seconds for 11 year
+DEBUG:root:	469 images took 1.1468295971552531 minute for 12 year
+DEBUG:root:	689 images took 1.7325505256652831 minute for 13 year
+DEBUG:root:	321 images took 48.57721519470215 seconds for 14 year
+DEBUG:root:	613 images took 1.5630324363708497 minute for 15 year
+DEBUG:root:	541 images took 1.3179903030395508 minute for 16 year
+DEBUG:root:	225 images took 40.422547340393066 seconds for 17 year
+DEBUG:root:	616 images took 1.6576765815416972 minute for 18 year
+DEBUG:root:	1009 images took 2.9655579129854837 minute for 19 year
+DEBUG:root:Time taken for SHEM region and 91 freq: 14.947169121106466 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for SHEM region: 47.647656897703804 minute
+DEBUG:root:=========================================================================
+
+DEBUG:root:Images for WPAC region
+DEBUG:root:=========================================================================
+DEBUG:root:Frequency 19
+DEBUG:root:===========================================
+DEBUG:root:	1 images took 1.3751568794250488 seconds for 5 year
+DEBUG:root:	133 images took 28.086026668548584 seconds for 6 year
+DEBUG:root:	114 images took 22.643569946289062 seconds for 7 year
+DEBUG:root:	174 images took 36.961634397506714 seconds for 8 year
+DEBUG:root:	286 images took 59.81108069419861 seconds for 9 year
+DEBUG:root:	290 images took 56.06348490715027 seconds for 10 year
+DEBUG:root:	605 images took 2.0167824228604636 minute for 11 year
+DEBUG:root:	622 images took 2.086549150943756 minute for 12 year
+DEBUG:root:	556 images took 1.9749496221542358 minute for 13 year
+DEBUG:root:	538 images took 1.8212251385053 minute for 14 year
+DEBUG:root:	1130 images took 3.879499061902364 minute for 15 year
+DEBUG:root:	665 images took 2.1683547735214233 minute for 16 year
+DEBUG:root:	563 images took 1.9572618126869201 minute for 17 year
+DEBUG:root:	906 images took 3.306056257088979 minute for 18 year
+DEBUG:root:	1011 images took 3.237240505218506 minute for 19 year
+DEBUG:root:Time taken for WPAC region and 19 freq: 25.86363452275594 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 37
+DEBUG:root:===========================================
+DEBUG:root:	1 images took 0.19405889511108398 seconds for 5 year
+DEBUG:root:	135 images took 27.119789123535156 seconds for 6 year
+DEBUG:root:	114 images took 21.583104610443115 seconds for 7 year
+DEBUG:root:	174 images took 34.71828842163086 seconds for 8 year
+DEBUG:root:	288 images took 58.890273094177246 seconds for 9 year
+DEBUG:root:	290 images took 57.32700729370117 seconds for 10 year
+DEBUG:root:	608 images took 1.9475456515947978 minute for 11 year
+DEBUG:root:	627 images took 2.04817156791687 minute for 12 year
+DEBUG:root:	557 images took 1.8928329865137736 minute for 13 year
+DEBUG:root:	549 images took 1.767947248617808 minute for 14 year
+DEBUG:root:	1155 images took 3.643399719397227 minute for 15 year
+DEBUG:root:	476 images took 1.485067574183146 minute for 16 year
+DEBUG:root:	370 images took 1.1932212352752685 minute for 17 year
+DEBUG:root:	609 images took 2.080112953980764 minute for 18 year
+DEBUG:root:	669 images took 2.0807631611824036 minute for 19 year
+DEBUG:root:Time taken for WPAC region and 37 freq: 21.469654019673666 minute
+DEBUG:root:===========================================
+DEBUG:root:Frequency 91
+DEBUG:root:===========================================
+DEBUG:root:	1 images took 0.23621153831481934 seconds for 5 year
+DEBUG:root:	134 images took 28.416628122329712 seconds for 6 year
+DEBUG:root:	113 images took 23.477649688720703 seconds for 7 year
+DEBUG:root:	166 images took 36.413843870162964 seconds for 8 year
+DEBUG:root:	283 images took 1.0055768728256225 minute for 9 year
+DEBUG:root:	288 images took 59.29783892631531 seconds for 10 year
+DEBUG:root:	603 images took 2.085412923494975 minute for 11 year
+DEBUG:root:	619 images took 2.1879581133524577 minute for 12 year
+DEBUG:root:	557 images took 2.037443784872691 minute for 13 year
+DEBUG:root:	548 images took 1.9353447318077088 minute for 14 year
+DEBUG:root:	1151 images took 3.950556993484497 minute for 15 year
+DEBUG:root:	663 images took 2.2965805649757387 minute for 16 year
+DEBUG:root:	569 images took 2.058435022830963 minute for 17 year
+DEBUG:root:	916 images took 3.308574696381887 minute for 18 year
+DEBUG:root:	1017 images took 3.452044900258382 minute for 19 year
+DEBUG:root:Time taken for WPAC region and 91 freq: 26.782014711697897 minute
+DEBUG:root:===========================================
+DEBUG:root:Time taken for WPAC region: 1.2352550542354583 hour
+DEBUG:root:=========================================================================
+DEBUG:root:Total Time taken: 3.7660597835646734 hour
