@@ -30,7 +30,6 @@ class StormReader():
         self.__mRegion = region
         self.__mStormNo = stormNo
         
-        
         # Setting the path where Images will be created
         path= "..\\..\\MyCreatedData_New\\"
         MakeDir(path+self.__mRegion)
@@ -112,7 +111,7 @@ class StormReader():
         self.__mLog.debug("===========================================================")
         self.__mLog.debug(msg)
         self.__mLog.debug("===========================================================")
-        
+
     def __ReadMatFiles(self,filename):
         matfile_date = GetSerialDateFromString(filename[:15])
         
@@ -129,7 +128,7 @@ class StormReader():
                                                                     'Pressure' : pressure,
                                                                     'Windspeed': wind }, ignore_index=True)
         # Reading the MatFile
-        self.__mMatReaderClass.ReadFile( filename, centerLon, centerLat )
+        self.__mMatReaderClass.ReadFileAndCreateImages( filename, centerLon, centerLat )
         
     def __CenterPositionAndWindPressure(self,matfile_date):
         x = self.__mBestTrackDate

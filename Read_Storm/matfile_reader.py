@@ -72,22 +72,30 @@ class MatReader():
         
     def PCT_Function(self,v,h,val):
         return val[0]*v - val[1]*h
-    
-    def ReadFile(self,matFile,centerLon,centerLat):
+
+    def ReadMatFile(self,matFile):
+        try:
+            mat = scipy.io.loadmat(self.mMatPath+matFile)
+        except:
+            msg = "Error Reading File: " + str( self.mMatPath+matFile ) 
+            self.__mLog.error( msg )
+        return mat
+
+    def ReadFileAndCreateImages(self,matFile,centerLon,centerLat):
         self.__mErrors[0] = ["Invalid Lat and Lon values     : ",[]]
         self.__mErrors[1] = ["Invalid shape of Frequency     : ",[]]
         self.__mErrors[2] = ["Invalid Brightness Temperature : ",[]]
         self.__mErrors[3] = ["Land found in smaller region   : ",[]]
         
         self.__mLog = GetLogger(current_process().name)
-        try:
-            mat = scipy.io.loadmat(self.mMatPath+matFile)
-        except:
-            msg = "Error Reading File: " + str( self.mMatPath+matFile ) 
-            self.__mLog.error( msg )
         
+        mat = ReadMatFile(matFile)
         swaths = mat["passData"][0][0]
         
+        # Selecting some portion of the image by CenterLon and CenterLat
+        circle= geodesic.Geodesic().circle(centerLon, centerLat, 400000)
+        poly = sgeom.Polygon(circle)
+
         for freq,swathList in self.__mFreq_to_swath.items():
             
             # Setting image path
@@ -117,9 +125,6 @@ class MatReader():
             #ax.set_xticks(list(np.arange(-180,180,5)), crs=ccrs.PlateCarree())
             #ax.set_yticks(list(np.arange(-90,90,5)), crs=ccrs.PlateCarree())
 
-            # Selecting some portion of the image by CenterLon and CenterLat
-            circle= geodesic.Geodesic().circle(centerLon, centerLat, 400000)
-            poly = sgeom.Polygon(circle)
             ax.set_extent( [poly.bounds[0], poly.bounds[2], poly.bounds[1], poly.bounds[3]] )
             
             # Another Check to see if the smaller area has land near it
@@ -152,6 +157,19 @@ class MatReader():
             if len(v[1]) != 0:
                 self.__mLog.warning(v[0]+matFile+" : "+str(v[1]))
     
+    def ReadFileAndFindMaxMinTemperature(self,matFile,centerLon,centerLat):
+        self.__mErrors[0] = ["Invalid Lat and Lon values     : ",[]]
+        self.__mErrors[1] = ["Invalid shape of Frequency     : ",[]]
+        self.__mErrors[2] = ["Invalid Brightness Temperature : ",[]]
+        self.__mErrors[3] = ["Land found in smaller region   : ",[]]
+        
+        self.__mLog = GetLogger(current_process().name)
+        
+        mat = ReadMatFile(matFile)
+        swaths = mat["passData"][0][0]
+
+        
+
     def __CheckCriteria(self, lon, lat, tbs):
         # If any of the Lat and Lon in the file are invalid
         if  np.any(lat>=91) or np.any(lat<=-91) or np.any(lon>= 181) or np.any(lon<=-181):

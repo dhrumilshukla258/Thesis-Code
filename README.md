@@ -6,19 +6,21 @@ To recreate the results:
 
 Install Anaconda: https://docs.anaconda.com/anaconda/install/
 
-Libraries used:
-Scipy: Reads matfile and provides interpolate function
+Libraries not included in anaconda which were used in the thesis:
+Scipy: Reads matfile and provides interpolation function | Agglomerative clustering (Linkage Method) | Dendrogram Analysis
 Matplotlib and Cartopy: For plotting and creating worldmap
 Pandas: Reading & Writing csv and text files. Quering tables
-sklearn: Clustering Algorithms
+sklearn: Kmeans Algorithm
+OpenCV: Reads Images
 
-Commands to Run the Code:
--> First Creating an Environment
+Commands to Install Libraries:
+-> Frist Creating an Environment
 conda create --name thesis
 conda activate thesis
 
 -> Installing Necessary Library
-conda install -c conda-forge cartopy // Installing cartopy will install all the dependant libaries
 conda install -c conda-forge pandas
+conda install -c conda-forge opencv
+conda install -c conda-forge cartopy // Installing cartopy will install all the dependant libaries
+conda install -c conda-forge notebook
 conda install -c anaconda scikit-learn
-conda install -c conda-forge cv2
