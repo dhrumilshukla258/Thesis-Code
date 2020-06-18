@@ -1,8 +1,9 @@
 '''
 Use class StormReader to iterate through matfiles found in the storm
-It can calculate the BestTrack deatils 
+It will calculate the BestTrack deatils 
 i.e. Center Latitude and Longitude, Pressure and Wind
 '''
+import os
 import math
 import time
 
@@ -24,18 +25,18 @@ from helper_function import GetSerialDate
 from helper_function import GetSerialDateFromString
 
 class StormReader():
-    def __init__(self,stormDict,region,year,stormNo):
+    def __init__(self,stormDict,region,year,stormNo,path= "..\\..\\MyCreatedData_New\\"):
         self.__mStormDict = stormDict
         self.__mYear = year
         self.__mRegion = region
         self.__mStormNo = stormNo
         
         # Setting the path where Images will be created
-        path= "..\\..\\MyCreatedData_New\\"
-        MakeDir(path+self.__mRegion)
-        MakeDir(path+self.__mRegion+"\\"+self.__mYear)
-        MakeDir(path+self.__mRegion+"\\"+self.__mYear+"\\"+self.__mStormNo)
-        self.__mInitialDir = path+self.__mRegion+"\\"+self.__mYear+"\\"+self.__mStormNo+"\\"
+        
+        MakeDir(path+self.__mYear)
+        MakeDir(path+self.__mYear+"\\"+self.__mRegion)
+        MakeDir(path+self.__mYear+"\\"+self.__mRegion+"\\"+self.__mStormNo)
+        self.__mInitialDir = path+self.__mYear+"\\"+self.__mRegion+"\\"+self.__mStormNo+"\\"
         self.__mSatelliteDir = 0
         
         # Unique for each storm
@@ -101,18 +102,35 @@ class StormReader():
             
             self.__mMatReaderClass = MatReader(self.__mRootDirOfMatFile,self.__mSatellitePath)
             
+            '''
             # Iterate over all Matfiles
-            for filename in matFiles:
+            for filename in matFiles: # In all matfiles json we have list of matfiles. e.g. ["matfilename1", "matfilename2", ...]
                 self.__ReadMatFiles(filename)
-            
-        self.__mStormBestTrack.to_csv( self.__mInitialDir+"StormData.txt", sep='\t', index=False,encoding='utf-8')
+            '''
+            # Iterate over all valid Matfiles
+            for filename,freq in matFiles.items(): # In valid matfile json we have matfile in form of dict { "matfileName1" : ["19", "19V"], "matfilename2" : ["150H"], ... }
+                self.__ReadMatFiles(filename,freq)
+        
+            # If all .mat files for this satellite are invalid then no images or frequency directory will be created
+            # Remove the directory if that happens
+            if len(os.listdir(self.__mSatellitePath)) == 0:
+                self.__mLog.warning(f_+" satellite directory removed")
+                os.rmdir(self.__mSatellitePath)
+        
+        # If all satellite folders are deleted then no need to keep the Storm data
+        if len(os.listdir(self.__mInitialDir)) == 0:
+            self.__mLog.warning("Storm directory removed")
+            os.rmdir(self.__mInitialDir)
+        # Else create the table storing storm information
+        else:
+            self.__mStormBestTrack.to_csv( self.__mInitialDir+"StormData.txt", sep='\t', index=False,encoding='utf-8')
         
         msg = "Total time Reading : " + self.__mYear + " " + self.__mRegion + " " + self.__mStormNo + ": " + str( (time.time()-start)/60 ) + " minutes"
         self.__mLog.debug("===========================================================")
         self.__mLog.debug(msg)
         self.__mLog.debug("===========================================================")
 
-    def __ReadMatFiles(self,filename):
+    def __ReadMatFiles(self,filename,valid_freq = ['19','19V','19H','22V','37','37V','37H','91','91V','91H','150H','183_1H','183_3H','183_7H']):
         matfile_date = GetSerialDateFromString(filename[:15])
         
         # Finding Necessary details from the BestTrack File
@@ -128,7 +146,7 @@ class StormReader():
                                                                     'Pressure' : pressure,
                                                                     'Windspeed': wind }, ignore_index=True)
         # Reading the MatFile
-        self.__mMatReaderClass.ReadFileAndCreateImages( filename, centerLon, centerLat )
+        self.__mMatReaderClass.ReadFileAndCreateImages( filename, centerLon, centerLat, valid_freq )
         
     def __CenterPositionAndWindPressure(self,matfile_date):
         x = self.__mBestTrackDate

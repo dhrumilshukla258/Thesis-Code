@@ -14,19 +14,17 @@ from helper_function import GetLogger
 
 def RunThreads(stormDict, region,year,stormNo):
     sR = StormReader(stormDict, region,year,stormNo)
-    print(region,year,stormNo)
+    #print(region,year,stormNo)
     sR.ReadStorm()
 
 if __name__ == '__main__': 
-    data = json.load( open( "..\\matfiles_and_best_track.json" ) )
+    data = json.load( open( "..\\valid_matfiles_and_best_track.json" ) )
 
     arguments = []
     for region,v1 in data.items():
         for year,v2 in v1.items():
             for stormNo,stormDict in v2.items():
                 arguments.append([stormDict,region,year,stormNo])
-            break
-        break
     start = time.time()
     
     # Processes according to total cores available

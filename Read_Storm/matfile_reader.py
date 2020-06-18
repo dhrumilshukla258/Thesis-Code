@@ -35,6 +35,25 @@ land_shp_fname = shpreader.natural_earth(resolution='50m',
 land_geom = unary_union(list(shpreader.Reader(land_shp_fname).geometries()))
 land = prep(land_geom)
 
+Freq_to_swath = {}
+Freq_to_swath['19']  = [0,[2.400, 1.400],[265,320]]
+Freq_to_swath['19V'] = [0,0,[180,290]]
+Freq_to_swath['19H'] = [0,1,[110,285]]
+Freq_to_swath['22V'] = [0,2,[210,290]]
+
+Freq_to_swath['37']  = [1,[2.150, 1.150],[250,310]]
+Freq_to_swath['37V'] = [1,0,[200,290]]
+Freq_to_swath['37H'] = [1,1,[135,285]]
+
+Freq_to_swath['91']  = [3,[1.751, 0.751],[140,300]]
+Freq_to_swath['91V'] = [3,0,[135,295]]
+Freq_to_swath['91H'] = [3,1,[135,295]]
+
+Freq_to_swath['150H'] = [2,0,[110,295]]
+Freq_to_swath['183_1H'] = [2,1,[120,270]]
+Freq_to_swath['183_3H'] = [2,2,[110,280]]
+Freq_to_swath['183_7H'] = [2,3,[110,290]]
+
 def IsLand(lon,lat):
     global land
     for x in lon:
@@ -43,33 +62,15 @@ def IsLand(lon,lat):
                 return True
     return False
     
-class MatReader():    
+class MatReader():
+    global Freq_to_swath
     def __init__(self,matpath,satpath):
         #self.mReg = reg
         self.__mLog = 0
         self.__mErrors = {}
         self.mMatPath = matpath
         self.mSatellitePath = satpath
-        
-        self.__mFreq_to_swath = {}
-        self.__mFreq_to_swath['19']  = [0,[2.400, 1.400]] 
-        self.__mFreq_to_swath['19V'] = [0,0]
-        self.__mFreq_to_swath['19H'] = [0,1]
-        self.__mFreq_to_swath['22V'] = [0,2]
 
-        self.__mFreq_to_swath['37']  = [1,[2.150, 1.150]]
-        self.__mFreq_to_swath['37V'] = [1,0]
-        self.__mFreq_to_swath['37H'] = [1,1]
-
-        self.__mFreq_to_swath['91']  = [3,[1.751, 0.751]]
-        self.__mFreq_to_swath['91V'] = [3,0] 
-        self.__mFreq_to_swath['91H'] = [3,1]
-
-        self.__mFreq_to_swath['150H'] = [2,0]
-        self.__mFreq_to_swath['183_1H'] = [2,1]
-        self.__mFreq_to_swath['183_3H'] = [2,2]
-        self.__mFreq_to_swath['183_7H'] = [2,3]
-        
     def PCT_Function(self,v,h,val):
         return val[0]*v - val[1]*h
 
@@ -81,7 +82,7 @@ class MatReader():
             self.__mLog.error( msg )
         return mat
 
-    def ReadFileAndCreateImages(self,matFile,centerLon,centerLat):
+    def ReadFileAndCreateImages(self,matFile,centerLon,centerLat,valid_freq = ['19','19V','19H','22V','37','37V','37H','91','91V','91H','150H','183_1H','183_3H','183_7H']):
         self.__mErrors[0] = ["Invalid Lat and Lon values     : ",[]]
         self.__mErrors[1] = ["Invalid shape of Frequency     : ",[]]
         self.__mErrors[2] = ["Invalid Brightness Temperature : ",[]]
@@ -89,18 +90,18 @@ class MatReader():
         
         self.__mLog = GetLogger(current_process().name)
         
-        mat = ReadMatFile(matFile)
+        mat = self.ReadMatFile(matFile)
         swaths = mat["passData"][0][0]
         
         # Selecting some portion of the image by CenterLon and CenterLat
         circle= geodesic.Geodesic().circle(centerLon, centerLat, 400000)
         poly = sgeom.Polygon(circle)
 
-        for freq,swathList in self.__mFreq_to_swath.items():
+        for freq in valid_freq:
+            swathList = Freq_to_swath[freq]
             
             # Setting image path
             freqPath = self.mSatellitePath+"\\"+freq
-            imgPath = freqPath+"\\"+matFile[:len(matFile)-4]+".png"
             
             # Reading Freqdata
             swath_data = swaths[ swathList[0] ]
@@ -114,7 +115,7 @@ class MatReader():
             else:
                 tbs = channel[swathList[1]]
             
-            goForward, msg = self.__CheckCriteria(lon,lat,tbs)
+            goForward, msg = self.__CheckCriteria(lon,lat,tbs,swathList[2])
             if goForward == False:
                 self.__mErrors[msg][1].append(freq)
                 continue
@@ -138,7 +139,9 @@ class MatReader():
             
             # Mapping Lon, Lat and Brightness Temperature
             pc = ax.pcolormesh(lon, lat, tbs, cmap="jet_r")
-            
+            previous_clim = pc.get_clim()
+            pc.set_clim(swathList[2][0], swathList[2][1])
+        
             # Mask Land and CostLines
             ax.add_feature(cfeature.LAND, edgecolor='black', facecolor='black')
             ax.add_feature(cfeature.COASTLINE, edgecolor='black', facecolor='black')
@@ -150,27 +153,18 @@ class MatReader():
             #plt.colorbar(pc)
             
             # Storing the Image at the mentioned location
+            # Setting Image Path
+            minTbs = "{:.2f}".format(previous_clim[0])
+            maxTbs = "{:.2f}".format(previous_clim[1])
+            imgPath = freqPath+"\\"+matFile[:len(matFile)-4]+"_"+minTbs+"_"+maxTbs+".png"
             plt.savefig(imgPath,bbox_inches = 'tight', pad_inches = 0)
             plt.close()
         
         for k,v in self.__mErrors.items():
             if len(v[1]) != 0:
                 self.__mLog.warning(v[0]+matFile+" : "+str(v[1]))
-    
-    def ReadFileAndFindMaxMinTemperature(self,matFile,centerLon,centerLat):
-        self.__mErrors[0] = ["Invalid Lat and Lon values     : ",[]]
-        self.__mErrors[1] = ["Invalid shape of Frequency     : ",[]]
-        self.__mErrors[2] = ["Invalid Brightness Temperature : ",[]]
-        self.__mErrors[3] = ["Land found in smaller region   : ",[]]
-        
-        self.__mLog = GetLogger(current_process().name)
-        
-        mat = ReadMatFile(matFile)
-        swaths = mat["passData"][0][0]
 
-        
-
-    def __CheckCriteria(self, lon, lat, tbs):
+    def __CheckCriteria(self, lon, lat, tbs, min_max_tbs):
         # If any of the Lat and Lon in the file are invalid
         if  np.any(lat>=91) or np.any(lat<=-91) or np.any(lon>= 181) or np.any(lon<=-181):
             return False, 0
@@ -180,7 +174,7 @@ class MatReader():
         
         # If any brightness temperature has value above 320
         # and below 0 then its invalid
-        if np.any(tbs > 320) or np.any(tbs<0):
+        if np.any(tbs > min_max_tbs[1]) or np.any(tbs<min_max_tbs[0]):
             return False, 2
         
         return True, 4
