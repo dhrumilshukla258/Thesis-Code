@@ -35,24 +35,28 @@ land_shp_fname = shpreader.natural_earth(resolution='50m',
 land_geom = unary_union(list(shpreader.Reader(land_shp_fname).geometries()))
 land = prep(land_geom)
 
-Freq_to_swath = {}
-Freq_to_swath['19']  = [0,[2.400, 1.400],[265,320]]
-Freq_to_swath['19V'] = [0,0,[180,290]]
-Freq_to_swath['19H'] = [0,1,[110,285]]
-Freq_to_swath['22V'] = [0,2,[210,290]]
+freq_to_swath = {}
+# Index 0 means swath number [ S1, S2, S3, S4 ]
+# Index 1 for PCT Frequency is the equation value and for normal frequency i.e in S1/S2/S3/S4 where it belongs (index in that swath)
+# Index 2 is the colormap range
+# Index 3 is the validation range for the max_tbs is 400 for smaller freq and 320 for higher freq | min_tbs is >0 for all freq
+freq_to_swath['19']  = [0,[2.400, 1.400],[270,320],400]
+freq_to_swath['19V'] = [0,0,[185,295],400]
+freq_to_swath['19H'] = [0,1,[110,290],400]
+freq_to_swath['22V'] = [0,2,[205,290],400]
 
-Freq_to_swath['37']  = [1,[2.150, 1.150],[250,310]]
-Freq_to_swath['37V'] = [1,0,[200,290]]
-Freq_to_swath['37H'] = [1,1,[135,285]]
+freq_to_swath['37']  = [1,[2.150, 1.150],[250,310],400]
+freq_to_swath['37V'] = [1,0,[205,290],400]
+freq_to_swath['37H'] = [1,1,[135,290],400]
 
-Freq_to_swath['91']  = [3,[1.751, 0.751],[140,300]]
-Freq_to_swath['91V'] = [3,0,[135,295]]
-Freq_to_swath['91H'] = [3,1,[135,295]]
+freq_to_swath['91']  = [3,[1.751, 0.751],[135,300],320] 
+freq_to_swath['91V'] = [3,0,[130,295],320]
+freq_to_swath['91H'] = [3,1,[130,295],320]
 
-Freq_to_swath['150H'] = [2,0,[110,295]]
-Freq_to_swath['183_1H'] = [2,1,[120,270]]
-Freq_to_swath['183_3H'] = [2,2,[110,280]]
-Freq_to_swath['183_7H'] = [2,3,[110,290]]
+freq_to_swath['150H'] = [2,0,[105,295],320]
+freq_to_swath['183_1H'] = [2,1,[125,270],320]
+freq_to_swath['183_3H'] = [2,2,[105,280],320]
+freq_to_swath['183_7H'] = [2,3,[105,290],320]
 
 def IsLand(lon,lat):
     global land
@@ -63,7 +67,7 @@ def IsLand(lon,lat):
     return False
     
 class MatReader():
-    global Freq_to_swath
+    global freq_to_swath
     def __init__(self,matpath,satpath):
         #self.mReg = reg
         self.__mLog = 0
@@ -98,7 +102,7 @@ class MatReader():
         poly = sgeom.Polygon(circle)
 
         for freq in valid_freq:
-            swathList = Freq_to_swath[freq]
+            swathList = freq_to_swath[freq]
             
             # Setting image path
             freqPath = self.mSatellitePath+"\\"+freq
@@ -115,7 +119,7 @@ class MatReader():
             else:
                 tbs = channel[swathList[1]]
             
-            goForward, msg = self.__CheckCriteria(lon,lat,tbs,swathList[2])
+            goForward, msg = self.__CheckCriteria(lon,lat,tbs,swathList[3])
             if goForward == False:
                 self.__mErrors[msg][1].append(freq)
                 continue
@@ -164,7 +168,7 @@ class MatReader():
             if len(v[1]) != 0:
                 self.__mLog.warning(v[0]+matFile+" : "+str(v[1]))
 
-    def __CheckCriteria(self, lon, lat, tbs, min_max_tbs):
+    def __CheckCriteria(self, lon, lat, tbs, max_tbs):
         # If any of the Lat and Lon in the file are invalid
         if  np.any(lat>=91) or np.any(lat<=-91) or np.any(lon>= 181) or np.any(lon<=-181):
             return False, 0
@@ -174,7 +178,7 @@ class MatReader():
         
         # If any brightness temperature has value above 320
         # and below 0 then its invalid
-        if np.any(tbs > min_max_tbs[1]) or np.any(tbs<min_max_tbs[0]):
+        if np.any(tbs > max_tbs) or np.any(tbs<0):
             return False, 2
         
         return True, 4

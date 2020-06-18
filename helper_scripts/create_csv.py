@@ -54,7 +54,7 @@ def Find_Image_Area(imgPath):
     return colored_area
 
 class CreateCSV():
-    def __init__(self, reg_freq_list, path = "..\\..\\MyCreatedData_New" ):
+    def __init__(self, reg_freq_list, path = "..\\..\\MyCreatedData" ):
         # Initial Path
         self.__mPath = path
     
@@ -94,7 +94,7 @@ class CreateCSV():
         storm_data = pd.read_csv(storm_path+"StormData.txt",sep="\t")
         
         for f in files:
-            filename = f[:len(f)-18]+".png"
+            filename = f[:25]+".png"
             row = storm_data.loc[storm_data['FileName'] == filename]
             if len(row) == 1:
                 imgPath = freq_path+f
@@ -106,7 +106,7 @@ class CreateCSV():
                 t_no = Find_TNo(wind)
                 self.mResultRegFreq[(region,freq)].append([ imgPath,cenLon,cenLat,pressure,wind,area,t_no ]) 
             else:
-                print("Error No StormData : "+root+"\\"+f)
+                print("Error No StormData : ",year,region, stormNo,f_,filename)
     
     def __CreatingCSV(self):
         # Store into excel file
@@ -157,7 +157,7 @@ if __name__ == '__main__':
      
     print("===================================================")
     s = time.time()
-    
+     
     # Processes according to total cores available
     pool = Pool(processes=cpu_count())
     pool.map(RunProcess, arguments)

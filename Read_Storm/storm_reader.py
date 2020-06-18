@@ -25,7 +25,7 @@ from helper_function import GetSerialDate
 from helper_function import GetSerialDateFromString
 
 class StormReader():
-    def __init__(self,stormDict,region,year,stormNo,path= "..\\..\\MyCreatedData_New\\"):
+    def __init__(self,stormDict,region,year,stormNo,path= "..\\..\\MyCreatedData\\"):
         self.__mStormDict = stormDict
         self.__mYear = year
         self.__mRegion = region
