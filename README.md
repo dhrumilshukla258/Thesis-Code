@@ -30,3 +30,16 @@ conda install -c conda-forge cartopy
 conda install -c conda-forge notebook
 conda install -c anaconda scikit-learn
 ```
+
+### Before creating images:
+Go through the Examples\mat_to_img (full process example).pynb <br/>
+It explains on how the images are created and what changes can be made to create image with or without prerequisite. Additionally, you want to add or remove the colorbar or the axis, then you can edit the code in the function __ReadFreq of FreqReader Class provided in the mat_to_img (full process example).pynb file.
+
+To implement multiprocessing, I wrote scripts to create images. Go through the Read_Storm folder for that. <br/>
+In the scripts I have commented the code of adding axis and colorbar to the image, to uncomment go through the ReadFileAndCreateImages function of matreader class in the matfile_reader.py file. The structre of code is similar to how its written in pynb file.
+
+### To create images from the .mat files
+```
+cd Read_Storm
+python multiprocess_image_creation.py
+```
