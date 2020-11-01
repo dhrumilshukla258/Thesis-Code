@@ -1,5 +1,7 @@
 import os
+import cv2
 import time
+import json
 import shutil
 import logging
 import numpy as np
@@ -58,113 +60,184 @@ def Create_Grouped_TNo_Column(cl_path):
     test_df[ "T_No" ] = test_df["T_No_NonGrouped"].map(mapping_values)
     test_df.to_csv(cl_path+"testInfo.csv",index=False)
 
+def CreateGraphicalComparisionBetweenClusterSize(funpath):
+    test_list = os.listdir( funpath )
+    
+    for sig in ["NonGroupedResult", "GroupedResult"]:
+        for test in test_list:
+            if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
+                continue
+            
+            # Get necessary data
+            total_sil_mean = []
+            total_sig_clusters = []
+            total_images = []
+            total_k = []
+            
+            # Setting test path
+            testpath = funpath + test + "\\"
+            
+            # Getting all cluster sizes from the test path
+            cl_nums = os.listdir( testpath )
+            cl_nums.sort()
+            
+            # Iterate over all cluster sizes
+            for cl_num in cl_nums:
+                cl_path = testpath+cl_num+"\\"
+                sig_path = cl_path+sig+"\\"
+                sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
+
+                total_images.append(len(sig_cl_df))
+                total_sig_clusters.append( int(len(os.listdir(sig_path+"Composite_Images\\"))/2) )
+                total_sil_mean.append(np.mean( sig_cl_df.SilhouetteVal ))
+                total_k.append(int(cl_num))
+
+            # Plotting the dataset
+            fig, ax = plt.subplots( ncols=1, nrows=3, figsize=(8,10), sharex=True )
+            ax[0].set_title(test)
+            ax[0].set_ylabel("Total Images")
+            ax[0].set_xlabel("Cluster Number")
+            ax[0].scatter(total_k,total_images)
+
+            ax[1].set_ylabel("Total Sig Cluster")
+            ax[1].set_xlabel("Cluster Number")
+            ax[1].scatter(total_k,total_sig_clusters)
+
+            ax[2].set_ylabel("Mean Sil Value")
+            ax[2].set_xlabel("Cluster Number")
+            ax[2].scatter(total_k,total_sil_mean)
+
+            plt.savefig( funpath+sig+"\\"+test+"_cluster_compare.png")
+            plt.close()
+
+def CreateTableOfClusterComposite(funpath):
+    def GetMaxComposites(testpath, whichResult):
+        cl_sizes = os.listdir( testpath )
+        cl_sizes.sort()
+        total_sig_clusters = []
+        for cl_size in cl_sizes:
+            cl_path = testpath+cl_size+"\\"
+            # nongrouped | grouped
+            sig_path = cl_path+whichResult+"\\Composite_Images\\"
+            compo_imgs = os.listdir( sig_path )
+            total_sig_clusters.append( int(len(compo_imgs)/2) )
+        return max(total_sig_clusters)
+
+    test_list = os.listdir( funpath )
+    for sig in ["NonGroupedResult", "GroupedResult"]:
+        for test in test_list:
+            if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
+                continue
+            
+            # Setting test path
+            testpath = funpath + test + "\\"
+            
+            # Get total maximum sig clusters
+            max_total_sig_clusters = GetMaxComposites(testpath,sig)
+
+            # Getting all cluster sizes from the test path
+            cl_nums = os.listdir( testpath )
+            cl_nums.sort()
+            
+            # Setting the Table to merge all images in the list
+            arr = [[]] * len(cl_nums) # This will be from 10-50
+
+            # Iterate over all cluster sizes
+            for cl_num in cl_nums:
+                cl_path = testpath+cl_num+"\\"
+                sig_path = cl_path+sig+"\\"
+
+                # The size of individual images is fixed | This will store all the significant composites
+                # for a unique cl_num in the list
+                sig_cluster_arr = [np.ones((96,96,3), dtype=np.uint8)] * max_total_sig_clusters
+                j=0
+                compo_imgs = os.listdir( sig_path+"Composite_Images\\" )
+                for img_name in compo_imgs:
+                    if "Max" in img_name:
+                        continue
+                    
+                    # The image name consist of sig_cl_number(where image belongs) and total images in that sig_cl_number
+                    index = img_name.find("_")
+                    total_images = img_name[index+1:-4]
+                    img = cv2.imread(sig_path+"Composite_Images\\"+img_name)
+                    img = img[:,:480]
+                    img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
+                    # Labeling the image                    
+                    img = cv2.putText(img, text=total_images, org=(10,20),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+
+                    sig_cluster_arr[j] = img
+                    j+=1
+                
+                arr[int(cl_num)-10] = cv2.hconcat(sig_cluster_arr)
+        
+            cv2.imwrite(funpath+sig+"\\"+test+"_CompositeGraph.png", cv2.vconcat(arr) )
+
+def AnalyzeEachClusterSizes(funpath, freq):
+    test_list = os.listdir( funpath )
+    for sig in ["NonGroupedResult", "GroupedResult"]:
+        for test in test_list:
+            if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
+                continue
+            # Setting test path
+            testpath = funpath + test + "\\"
+
+            # Getting all cluster sizes from the test path
+            cl_nums = os.listdir( testpath )
+            cl_nums.sort()
+
+            # Iterate over all cluster sizes
+            for cl_num in cl_nums:
+                cl_path = testpath+cl_num+"\\"
+                sig_path = cl_path+sig+"\\"
+
+                if os.path.isfile( sig_path+"sig_testInfo.csv" ) == False:
+                    #This Function : Adds column of grouped_t_no in the testInfo.csv   
+                    #Create_Grouped_TNo_Column(cl_path)
+
+                    # 1st Arg: The testInfo.csv file
+                    # 2nd Arg: The SigPath where the new sig_csv should be pasted
+                    MakeDir(sig_path)
+                    sC = SignificantCluster(pd.read_csv( cl_path+"testInfo.csv" ), sig_path)
+                    sC.Create_Sig_Cluster_DF()
+                    del sC
+
+                sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
+
+                tR = TestResults(sig_cl_df, sig_path, freq)
+                # Uncomment the code which ever you would like to run:
+                #tR.Composite_Images()
+                #tR.Create_Histogram()
+                #tR.Sil_Distribution( freq, cl_num )
+                #tR.Remove_Pasted_Images()
+                del tR
+
 def RunTestAnalysis( args ):
     mLog = GetLogger(current_process().name)
-    for reg,freq in args:
-        path = "E:\\AllFrequencies\\"+reg+"\\"+freq+"\\"
-        for fun in funList:
-            funpath = path + fun +"\\"
+    reg, freq = args
+    path = "E:\\AllFrequencies\\"+reg+"\\"+freq+"\\"
+    for fun in funList:
+        funpath = path + fun +"\\"
 
-            test_list = os.listdir(funpath)
-            for test in test_list:
-                if ".png" in test or "NonGroupedResult" in test:
-                    continue
+        #AnalyzeEachClusterSizes(funpath, freq)
+        CreateTableOfClusterComposite(funpath)
+        #CreateGraphicalComparisionBetweenClusterSize(funpath)
 
-                total_sil_mean = []
-                total_sig_clusters = []
-                total_images = []
-                total_k = []
-                
-                testpath = funpath + test + "\\"
-                cl_nums = os.listdir( funpath+test )
-                for cl_num in cl_nums:
 
-                    cl_path = testpath+cl_num+"\\"
-                    cl_df = pd.read_csv(cl_path+"sig_testInfo.csv")
-
-                    #tR = TestResults(cl_df, cl_path, freq)
-                    #tR.Composite_Images()
-                    #tR.Create_Histogram()
-                    #tR.Sil_Distribution( freq, cl_num )
-                    #tR.Remove_Pasted_Images()
-                    #del tR
-
-                    total_images.append(len(cl_df))
-                    total_sig_clusters.append( int(len(os.listdir(cl_path+"Composite_Images\\"))/2) )
-                    total_sil_mean.append(np.mean( cl_df.SilhouetteVal ))
-                    total_k.append(int(cl_num))
-
-                fig, ax = plt.subplots( ncols=1, nrows=3, figsize=(8,10), sharex=True )
-                ax[0].set_title(test)
-                ax[0].set_ylabel("Total Images")
-                ax[0].set_xlabel("Cluster Number")
-                ax[0].scatter(total_k,total_images)
-
-                ax[1].set_ylabel("Total Sig Cluster")
-                ax[1].set_xlabel("Cluster Number")
-                ax[1].scatter(total_k,total_sig_clusters)
-
-                ax[2].set_ylabel("Mean Sil Value")
-                ax[2].set_xlabel("Cluster Number")
-                ax[2].scatter(total_k,total_sil_mean)
-
-                plt.savefig( funpath+test+"_cluster_compare.png")
-                plt.close()
-
-#continue
-
-'''
-
-mLog.debug(testpath)
-
-cl_nums = os.listdir( funpath+test )
-for cl_num in cl_nums:
-    cl_path = testpath+cl_num+"\\"
-    if os.path.isfile( cl_path+"sig_testInfo.csv" ) == False:
-        #Create_Grouped_TNo_Column(cl_path)
-        sC = SignificantCluster(pd.read_csv( cl_path+"testInfo.csv" ), cl_path)
-        sC.Create_Sig_Cluster_DF()
-        del sC
-    
-    cl_df = pd.read_csv(cl_path+"sig_testInfo.csv")
-
-    
-'''
-def DivideDataForMultipleProcess():
-    fList = ['19H','19V','19PCT','22V','37V','37H','37PCT','91H','91V','91PCT','150H','183_1H','183_3H','183_7H']
-    rList = ['ATL','CPAC','EPAC','IO','SHEM','WPAC']
-    # Here we could have used multiprocess manager but thats slow
-    # so here is another trick which is to distribute data equally to all processes
-    reg_freq_dict = {}
-    
-    #Dividing data based on total number of processes == if total cores are 4 
-    #we get 21 (reg,freq) combo allocated to each processes
-    total_allocation_of_argument_on_each_process = len(rList)*len(fList) / cpu_count()
-    print(total_allocation_of_argument_on_each_process)
-    i = 0
-    j = 0
+def GetArguments():
+    fList = ['19H']#,'19V','19PCT','22V','37V','37H','37PCT','91H','91V','91PCT','150H','183_1H','183_3H','183_7H']
+    rList = ['ATL']#,'CPAC','EPAC','IO','SHEM','WPAC']
+    arguments = []
     for r in rList:
         for f in fList:
-            if reg_freq_dict.get(j) == None:
-                reg_freq_dict[j] = []
-            reg_freq_dict[ j ].append( (r,f) )
-            
-            i+=1
-            if i >= total_allocation_of_argument_on_each_process:
-                i = 0
-                j+=1
-    
-    # variable j should be equal to cpu_count()
-    arguments = []
-    for i,arg in reg_freq_dict.items():
-        arguments.append(arg)
-    
+            arguments.append( (r,f) )
     return arguments
 
 if __name__ == '__main__':
- 
+
     # arguments length will be equal to cpu_count()
-    arguments = DivideDataForMultipleProcess()
+    arguments = GetArguments()
     
     print("===================================================")
     s = time.time()
@@ -177,91 +250,3 @@ if __name__ == '__main__':
     
     print("Total time taken : "+str( (time.time()-s)/60 )+" min")
     print("=================================================")
-
-
-
-'''
-if ".png" in test:
-os.rename(funpath+test,funpath+test[:6]+"_cluster_compare.png")
-'''
-
-                
-                
-            
-
-'''
-ls = os.listdir(funpath)
-            for test in ls:
-                testPath = funpath + test + "\\"
-                if os.path.isfile( testPath+"sig_testInfo.csv" ) == False:
-                    sC = SignificantCluster(pd.read_csv( testPath+"testInfo.csv" ), testPath)
-                    sC.Create_Sig_Cluster_DF()
-                    del sC
-                imgFreq[reg][freq][fun][test] = pd.read_csv(testPath+"sig_testInfo.csv")
-'''
-
-
-
-'''
-        total_sil_mean = []
-        total_sig_clusters = []
-        total_images = []
-        total_k = []
-
-        cl_nums = os.listdir( funpath+test )
-        for cl_num in cl_nums:
-            cl_path = testpath+cl_num+"\\"
-
-            if os.path.isfile( cl_path+"sig_testInfo.csv" ) == False:
-                sC = SignificantCluster(pd.read_csv( cl_path+"testInfo.csv" ), cl_path)
-                sC.Create_Sig_Cluster_DF()
-                del sC
-
-            #imgFreq[reg][freq][fun][test] = pd.read_csv(cl_path+"sig_testInfo.csv")
-            cl_df = pd.read_csv(cl_path+"sig_testInfo.csv")
-
-            tR = TestResults(cl_df, cl_path, freq)
-            tR.Composite_Images()
-            tR.Create_Histogram()
-            tR.Sil_Distribution( freq, cl_num )
-            #tR.Remove_Pasted_Images()
-            del tR
-
-            total_images.append(len(cl_df))
-            total_sig_clusters.append( int(len(os.listdir(cl_path+"Composite_Images\\"))/2) )
-            total_sil_mean.append(np.mean( cl_df.SilhouetteVal ))
-            total_k.append(int(cl_num))
-
-        fig, ax = plt.subplots( ncols=1, nrows=3, figsize=(8,10), sharex=True )
-        ax[0].set_title(test)
-        ax[0].set_ylabel("Total Images")
-        ax[0].set_xlabel("Cluster Number")
-        ax[0].scatter(total_k,total_images)
-
-        ax[1].set_ylabel("Total Sig Cluster")
-        ax[1].set_xlabel("Cluster Number")
-        ax[1].scatter(total_k,total_sig_clusters)
-
-        ax[2].set_ylabel("Mean Sil Value")
-        ax[2].set_xlabel("Cluster Number")
-        ax[2].scatter(total_k,total_sil_mean)
-
-        plt.savefig( funpath+test+"_cluster_compare.png")
-        plt.close()
-        '''
-
-
-'''
-non_grouped_path =  cl_path+"NonGroupedResult\\"
-MakeDir(non_grouped_path)
-
-# All the Files Created for each test Cases
-test_file_and_dir_list = os.listdir(cl_path)
-for folder_or_file_name in test_file_and_dir_list:
-    if "dend" in folder_or_file_name or "testInfo.csv" == folder_or_file_name or "NonGroupedResult" == folder_or_file_name:
-        continue
-
-    old_path = cl_path+folder_or_file_name
-    new_path = non_grouped_path+folder_or_file_name
-    shutil.move(old_path,new_path)
-'''
