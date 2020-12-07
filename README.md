@@ -56,7 +56,7 @@ python cluster_iteration.py
 ### Applying Clustering Analysis
 The Apply_Cluster_Analysis\test_result_script.py, consist of class of methods consisting of various analysis applied on all cluster methods.
 
-# To apply cluster analysis on the cluster output
+### To apply cluster analysis on the cluster output
 ```
 cd Apply_Cluster_Analysis
 python test_iteration_script.py
