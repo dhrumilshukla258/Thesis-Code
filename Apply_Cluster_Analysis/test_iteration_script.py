@@ -1,4 +1,5 @@
 import os
+import re
 import cv2
 import time
 import json
@@ -12,14 +13,17 @@ from significant_cluster import SignificantCluster
 from test_result_script import TestResults
 from test_result_script import MakeDir
 
-# For Parallizing the Reading of Images
+# For Parallizing the Reading of (Region and Freq)
 from multiprocessing import Pool, cpu_count
 from multiprocessing import current_process
 
 #
 #
-#'kmeans','fuzzykmeans'
-funList = ['agglo']
+#'kmeans','fuzzykmeans','agglo'
+funList = [ ['agglo',['NonGroupedResult\\','GroupedResult\\']],#
+            ['kmeans',['']],
+            ['fuzzykmeans',['']]
+          ]
 
 mapping_values = {}
 mapping_values[0.0] = 0.0
@@ -40,10 +44,6 @@ mapping_values[5.5] = 5.0
 mapping_values[6.5] = 6.0
 mapping_values[7.5] = 7.0
 
-def MakeDir(path):
-    if os.path.isdir(path) == False:
-        os.mkdir(path)
-
 def GetLogger(logName):
     myLog = logging.getLogger(logName)
     if not myLog.hasHandlers():
@@ -60,10 +60,10 @@ def Create_Grouped_TNo_Column(cl_path):
     test_df[ "T_No" ] = test_df["T_No_NonGrouped"].map(mapping_values)
     test_df.to_csv(cl_path+"testInfo.csv",index=False)
 
-def CreateGraphicalComparisionBetweenClusterSize(funpath):
+def CreateGraphicalComparisionBetweenClusterSize(funpath,g_ng_for_agglo_blank_for_other_algo):
     test_list = os.listdir( funpath )
     
-    for sig in ["NonGroupedResult", "GroupedResult"]:
+    for sig in g_ng_for_agglo_blank_for_other_algo:
         for test in test_list:
             if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
                 continue
@@ -84,7 +84,7 @@ def CreateGraphicalComparisionBetweenClusterSize(funpath):
             # Iterate over all cluster sizes
             for cl_num in cl_nums:
                 cl_path = testpath+cl_num+"\\"
-                sig_path = cl_path+sig+"\\"
+                sig_path = cl_path+sig
                 sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
 
                 total_images.append(len(sig_cl_df))
@@ -110,7 +110,7 @@ def CreateGraphicalComparisionBetweenClusterSize(funpath):
             plt.savefig( funpath+sig+"\\"+test+"_cluster_compare.png")
             plt.close()
 
-def CreateTableOfClusterComposite(funpath):
+def CreateTableOfClusterComposite(funpath,g_ng_for_agglo_blank_for_other_algo):
     def GetMaxComposites(testpath, whichResult):
         cl_sizes = os.listdir( testpath )
         cl_sizes.sort()
@@ -123,8 +123,9 @@ def CreateTableOfClusterComposite(funpath):
             total_sig_clusters.append( int(len(compo_imgs)/2) )
         return max(total_sig_clusters)
 
+    #mLog = GetLogger(current_process().name)
     test_list = os.listdir( funpath )
-    for sig in ["NonGroupedResult", "GroupedResult"]:
+    for sig in g_ng_for_agglo_blank_for_other_algo#["NonGroupedResult", "GroupedResult",""]:
         for test in test_list:
             if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
                 continue
@@ -145,12 +146,17 @@ def CreateTableOfClusterComposite(funpath):
             # Iterate over all cluster sizes
             for cl_num in cl_nums:
                 cl_path = testpath+cl_num+"\\"
-                sig_path = cl_path+sig+"\\"
+                sig_path = cl_path+sig
+                sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
 
                 # The size of individual images is fixed | This will store all the significant composites
                 # for a unique cl_num in the list
-                sig_cluster_arr = [np.ones((96,96,3), dtype=np.uint8)] * max_total_sig_clusters
-                j=0
+                sig_cluster_arr = [np.ones((96,96,3), dtype=np.uint8)] * (max_total_sig_clusters+1)
+                img = cv2.putText(np.ones((96,96,3), dtype=np.uint8), text=str(cl_num), org=(38,38),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+                sig_cluster_arr[0] = img
+                j=1
                 compo_imgs = os.listdir( sig_path+"Composite_Images\\" )
                 for img_name in compo_imgs:
                     if "Max" in img_name:
@@ -158,12 +164,23 @@ def CreateTableOfClusterComposite(funpath):
                     
                     # The image name consist of sig_cl_number(where image belongs) and total images in that sig_cl_number
                     index = img_name.find("_")
+                    sig_cl_num = img_name[:index]
+                    avg_sil_score = np.mean( sig_cl_df[ sig_cl_df.ClusterLabel == int(sig_cl_num) ].SilhouetteVal )
+                    
                     total_images = img_name[index+1:-4]
                     img = cv2.imread(sig_path+"Composite_Images\\"+img_name)
-                    img = img[:,:480]
+                    try:
+                        img = img[:,:480]
+                    except TypeError:
+                        continue
+
                     img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
                     # Labeling the image                    
                     img = cv2.putText(img, text=total_images, org=(10,20),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+
+                    img = cv2.putText(img, text="{:.2f}".format( avg_sil_score ), org=(10,90),
                     fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
                     thickness=2, lineType=cv2.LINE_AA)
 
@@ -172,14 +189,17 @@ def CreateTableOfClusterComposite(funpath):
                 
                 arr[int(cl_num)-10] = cv2.hconcat(sig_cluster_arr)
         
-            cv2.imwrite(funpath+sig+"\\"+test+"_CompositeGraph.png", cv2.vconcat(arr) )
+            #funpath+ | sig+"\\"+ | test
+            cv2.imwrite(funpath+test+"_CompositeGraph.png", cv2.vconcat(arr) )
 
-def AnalyzeEachClusterSizes(funpath, freq):
+def AnalyzeEachClusterSizes(funpath, freq, g_ng_for_agglo_blank_for_other_algo):
     test_list = os.listdir( funpath )
-    for sig in ["NonGroupedResult", "GroupedResult"]:
+
+    for sig in g_ng_for_agglo_blank_for_other_algo: #["NonGroupedResult", "GroupedResult",""]:
         for test in test_list:
             if ".png" in test or "NonGroupedResult" in test or "GroupedResult" in test:            
                 continue
+
             # Setting test path
             testpath = funpath + test + "\\"
 
@@ -190,7 +210,7 @@ def AnalyzeEachClusterSizes(funpath, freq):
             # Iterate over all cluster sizes
             for cl_num in cl_nums:
                 cl_path = testpath+cl_num+"\\"
-                sig_path = cl_path+sig+"\\"
+                sig_path = cl_path+sig
 
                 if os.path.isfile( sig_path+"sig_testInfo.csv" ) == False:
                     #This Function : Adds column of grouped_t_no in the testInfo.csv   
@@ -203,31 +223,30 @@ def AnalyzeEachClusterSizes(funpath, freq):
                     sC.Create_Sig_Cluster_DF()
                     del sC
 
-                sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
-
-                tR = TestResults(sig_cl_df, sig_path, freq)
-                # Uncomment the code which ever you would like to run:
+                #sig_cl_df = pd.read_csv(sig_path+"sig_testInfo.csv")
+                #tR = TestResults(sig_cl_df, sig_path, freq)
+                # Uncomment the function which ever you would like to run:
                 #tR.Composite_Images()
                 #tR.Create_Histogram()
+                #tR.TableOfClusterCompositeAndImagesInIt()
                 #tR.Sil_Distribution( freq, cl_num )
                 #tR.Remove_Pasted_Images()
-                del tR
+                #del tR
 
 def RunTestAnalysis( args ):
-    mLog = GetLogger(current_process().name)
+    #mLog = GetLogger(current_process().name)
     reg, freq = args
     path = "E:\\AllFrequencies\\"+reg+"\\"+freq+"\\"
     for fun in funList:
-        funpath = path + fun +"\\"
-
-        #AnalyzeEachClusterSizes(funpath, freq)
-        CreateTableOfClusterComposite(funpath)
-        #CreateGraphicalComparisionBetweenClusterSize(funpath)
-
+        funpath = path + fun[0] +"\\"
+        AnalyzeEachClusterSizes(funpath, freq, fun[1])
+        #CreateTableOfClusterComposite(funpath, fun[1])
+        #CreateGraphicalComparisionBetweenClusterSize(funpath, fun[1])
+        #break
 
 def GetArguments():
-    fList = ['19H']#,'19V','19PCT','22V','37V','37H','37PCT','91H','91V','91PCT','150H','183_1H','183_3H','183_7H']
-    rList = ['ATL']#,'CPAC','EPAC','IO','SHEM','WPAC']
+    fList = ['19H','19V','19PCT','22V','37V','37H','37PCT','91H','91V','91PCT','150H','183_1H','183_3H','183_7H']
+    rList = ['ATL','CPAC','EPAC','IO','SHEM','WPAC']
     arguments = []
     for r in rList:
         for f in fList:
@@ -241,7 +260,6 @@ if __name__ == '__main__':
     
     print("===================================================")
     s = time.time()
-     
     # Processes according to total cores available
     print(cpu_count(),len(arguments))
     pool = Pool(processes=cpu_count())

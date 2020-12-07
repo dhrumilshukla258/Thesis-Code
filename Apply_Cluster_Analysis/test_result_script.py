@@ -29,8 +29,37 @@ colorbar['183_1H'] = [125,270]
 colorbar['183_3H'] = [105,280]
 colorbar['183_7H'] = [105,290]
 
+
+
+# Used for creating a table of images
+t_no_dict  = {}
+t_no_dict_2  = {}
+i=0
+for t_no in [-1,-2,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5]:
+    t_no_dict[t_no] = i
+    t_no_dict_2[t_no] = ""
+    i+=1
+
+t_no_dict_2[0.0] = ( "", (38,38) )
+t_no_dict_2[0.5] = ( "Trop", (55,38) ) 
+t_no_dict_2[1.0] = ( "ical", (0, 38) )
+t_no_dict_2[1.5] = ( "Depre", (42, 38) )
+t_no_dict_2[2.0] = ( "ssion", (0, 38) )
+
+t_no_dict_2[2.5] = ( "Trop", (55,38) )
+t_no_dict_2[3.0] = ( "ical", (0,38) ) 
+t_no_dict_2[3.5] = ( "Storm", (0, 38) )
+t_no_dict_2[4.0] = ( "Cat", (65, 38) )
+t_no_dict_2[4.5] = ( "1", (0, 38) )
+t_no_dict_2[5.0] = ( "Cat 2", (25, 38) )
+t_no_dict_2[5.5] = ( "Cat 3", (25, 38) )
+t_no_dict_2[6.0] = ( "Cat", (65, 38) )
+t_no_dict_2[6.5] = ( "4", (0, 38) )
+
 class TestResults():
     global colorbar
+    global t_no_dict
+    global t_no_dict_2
     def __init__(self,df,path,freq):
         self.__mSigDf = df
         self.__mColorbarLimit = colorbar[freq]
@@ -201,8 +230,135 @@ class TestResults():
         plt.savefig( self.__mPath+"sil_distr.png" )
         plt.close()
 
+    def TableOfClusterCompositeAndImagesInIt(self):
+        cluster_labels = self.__mSigDf.ClusterLabel.unique()
+        cluster_labels.sort()
+
+        cl_dict = {}
+        i = 1
+        for cL in cluster_labels:
+            cl_dict[cL] = i
+            i+=1
+
+        arr = [[]] * (len(cluster_labels)+1)
+        t_no_cluster_arr = [np.full((96,96,3), fill_value=255,dtype=np.uint8)] * (16)
+
+        # Create images for top row.
+        for t_no in [0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5]:
+            img = cv2.putText(np.full((96,96,3), fill_value=255,dtype=np.uint8), text="T"+str(t_no), org=(38,78),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0,0,0),
+                    thickness=2, lineType=cv2.LINE_AA)
 
 
+            img = cv2.putText(img, text=t_no_dict_2[t_no][0], org=t_no_dict_2[t_no][1], 
+                            fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.6, color=(0,0,0), 
+                            thickness=2, lineType=cv2.LINE_AA)
+
+            img[:,95,:] = 0
+            if t_no!=2.0 and t_no!= 3.5 and t_no!=4.5 and t_no!=5.0 and t_no!=5.5 and t_no!=6.5:
+                img[:,95,:] = 255
+            if t_no == 0.0:
+                img[:,0,:] = 0
+            img[50:,95,:] = 0  
+            img[50,:,:] = 0
+
+            t_no_cluster_arr[t_no_dict[t_no]] = img
+
+        # Concate each of the images created in the above for loop.
+        arr[0] = cv2.hconcat(t_no_cluster_arr)
+
+        for cL in cluster_labels:
+            sig_cluster_arr = [np.full((96,96,3), fill_value=255,dtype=np.uint8)] * (16)
+            for i in range(16):
+                sig_cluster_arr[i][:,95,:] = 0 
+                sig_cluster_arr[i][0,:,:] = 0
+                
+            img = cv2.putText(np.full((96,96,3), fill_value=255,dtype=np.uint8), text=str(cl_dict[cL]-1), org=(38,38),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0,0,0),
+                    thickness=2, lineType=cv2.LINE_AA)
+            sig_cluster_arr[0] = img
+            sig_cluster_arr[0][:,95,:] = 0
+            sig_cluster_arr[0][0,:,:] = 0
+
+            compo_imgs = os.listdir( self.__mPath+"Composite_Images\\" )
+            cl_df = self.__mSigDf[ self.__mSigDf.ClusterLabel == cL ]
+            for img_name in compo_imgs:
+                if "Max" in img_name:
+                    continue
+                    
+                index = img_name.find("_")
+                sig_cl_num = int( img_name[:index] )
+
+                # If the current CL is found move ahead
+                if sig_cl_num == cL:
+                    img = cv2.imread(self.__mPath+"Composite_Images\\"+img_name)
+                    try:
+                        img = img[:,:480]
+                    except TypeError:
+                        continue
+
+                    avg_sil_score = np.mean( cl_df.SilhouetteVal )
+                    total_images = img_name[index+1:-4]
+
+                    img = cv2.resize(img, (0,0), fx=0.2, fy=0.2)
+                    img[:,95,:] = 0
+                    img[0,:,:] = 0
+
+                    # Labeling the image                    
+                    img = cv2.putText(img, text=total_images, org=(10,20),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+
+                    img = cv2.putText(img, text="{:.2f}".format( avg_sil_score ), org=(10,90),
+                    fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                    thickness=2, lineType=cv2.LINE_AA)
+
+                    sig_cluster_arr[1] = img
+                    break
+            
+            # Find the image with highest silhouette score consisting of images from 3 different storms.
+            t_no_labels = cl_df.T_No.unique()
+            t_no_labels.sort()
+            sig_cl_dict = {}
+            for t_no in t_no_labels:
+                if t_no >= 7.0:
+                    continue
+
+                cl_t_no_df = cl_df[ cl_df.T_No == t_no ].sort_values(by=['SilhouetteVal'], ascending=False)
+                cl_t_no_row = None
+                for index,row in cl_t_no_df.iterrows():
+                    #cl_df.loc[ cl_df[ cl_df.T_No == t_no ].SilhouetteVal.idxmax()]
+                    if row.SilhouetteVal > 0.0:                
+                        m = [m.start() for m in re.finditer(r'\\', row.FileName)]
+                        year =  row.FileName[ m[2]+1:m[3] ]
+                        region = row.FileName[ m[3]+1:m[4] ]
+                        stormNo = row.FileName[ m[4]+1:m[5] ]
+                        if sig_cl_dict.get((year,region,stormNo)) == None:
+                            sig_cl_dict[(year,region,stormNo)] = 1
+                            cl_t_no_row = row
+                            break
+                    else:
+                        break
+
+                #print(cl_t_no_row)
+                try:
+                    img = cv2.imread(cl_t_no_row.FileName)               
+                except AttributeError:
+                    continue
+                
+                img = cv2.resize(img, (96,96))
+                img = cv2.putText(img, text="{:.2f}".format( cl_t_no_row.SilhouetteVal ), org=(10,90),
+                        fontFace= cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(255,255,255),
+                        thickness=2, lineType=cv2.LINE_AA)
+
+                sig_cluster_arr[t_no_dict[t_no]] = img
+                sig_cluster_arr[t_no_dict[t_no]][:,95,:] = 0
+                sig_cluster_arr[t_no_dict[t_no]][0,:,:] = 0
+                #sort_values(by=['SilhouetteVal'], ascending=False)
+            arr[cl_dict[cL]] = cv2.hconcat(sig_cluster_arr)
+
+        cv2.imwrite(self.__mPath+"cluster_to_tno_image_table.png", cv2.vconcat(arr) )
+            
 '''
 def FindCommonTests():
     global regList
