@@ -174,7 +174,7 @@ class Octants():
                         param[t+5] = np.max(miniArr[:,j])
                         t+=6
         except:
-            self.__mLog("Error in Parameters Function of Octant Class: ", sys.exc_info()[0])
+            self.__mLog.debug("Error in Parameters Function of Octant Class: "+str(sys.exc_info()[0]))
         
         return param
     
@@ -217,7 +217,7 @@ class Octants():
                     img = img.astype(np.uint8)
                     cv2.imwrite(t_path+statArr[i]+"//cluster_"+str(clusterNo)+".png",img)
         except:
-            self.__mLog("Error in CreateImage Function of Octant Class for ",t_path," : ",sys.exc_info()[0] )
+            self.__mLog.debug("Error in CreateImage Function of Octant Class for "+t_path+" : "+str(sys.exc_info()[0]) )
 
 octa = Octants()
 octa.Calculate(360,[10,20,30,40,50,60,80,100,120,140,170,200,230,260,270,300,330,361])

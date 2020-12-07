@@ -1,5 +1,4 @@
-# For Parallizing the Creation of Images
-from multiprocessing import Pool, cpu_count
+# from multiprocessing import Pool, cpu_count
 
 # Get current process details
 from multiprocessing import current_process
@@ -13,6 +12,7 @@ from helper_function import GetLogger
 def RunThreads(df,region,freq):    
     test.RunTests(df,region,freq)
 '''
+
 if __name__ == '__main__':
     #,'CPAC','EPAC','IO','SHEM','WPAC'
     imgFreq = {}

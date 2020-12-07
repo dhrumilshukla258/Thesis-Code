@@ -43,3 +43,21 @@ In the scripts I have commented the code of adding axis and colorbar to the imag
 cd Read_Storm
 python multiprocess_image_creation.py
 ```
+
+### Applying Clustering
+Go through the Examples\cluster_test.ipynb. It provides the deatils on how the cluster algorithms are applied, octant creation and the test data selection. The structure of the code is similar to how it's written in the ipynb file. When we apply multiprocessing on the clustering algorithms each of the process which uses AllPixels selection requres more than 2-3GB of ram. This results in the CPU getting crashed. Due to this the cluster algorithm doesn't use the multiprocessing.
+
+### To apply cluster algorithms on the images
+```
+cd Apply_Clustering
+python cluster_iteration.py
+```
+
+### Applying Clustering Analysis
+The Apply_Cluster_Analysis\test_result_script.py, consist of class of methods consisting of various analysis applied on all cluster methods.
+
+# To apply cluster analysis on the cluster output
+```
+cd Apply_Cluster_Analysis
+python test_iteration_script.py
+```

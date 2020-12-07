@@ -28,14 +28,16 @@ class TestCases:
             self.testMethods[k].ClusterSize = self.testMethods[k].ClusterSize.astype(int)
             self.testMethods[k].MaxIter = self.testMethods[k].MaxIter.astype(int)
             self.testMethods[k].RingSize = self.testMethods[k].RingSize.apply(literal_eval)
-            
-    def RunTestCase(self, k,_df, test, t_path):
+
+    def RunTestCase(self, k,_df, test, t_path,freq,reg):
         start_1 = time.time()
         tds = TestDataSelection(_df,
                                 test.Area, 
                                 (test.ResolutionX,test.ResolutionY),
                                 test.Channel,
-                                test.RingSize
+                                test.RingSize,
+                                freq,
+                                reg
                                )
         
         matrix, df = tds.StartSelection()
@@ -55,6 +57,7 @@ class TestCases:
         elif k == "agglo":
             cL.Scipy_Agglomerative(test.DistanceMetric,
                                    test.Linkage,
+                                   df,
                                    t_path
                                   )
         elif k == "fuzzykmeans":
@@ -116,6 +119,6 @@ class TestCases:
 
                     self.__mLog.debug("Path for this Test Case:- "+t_path)
 
-                    self.RunTestCase(k,_df,test.iloc[case],t_path)
+                    self.RunTestCase(k,_df,test.iloc[case],t_path,freq,region)
 
                     self.__mLog.debug("Time taken -> "+region+" "+freq+" "+k+" "+test.TestNo.iloc[case]+" : "+str((time.time()-start_1)/60) + " min\n")

@@ -3,6 +3,7 @@ from sklearn.metrics import silhouette_samples, silhouette_score
 from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
 
+import pandas as pd
 import numpy as np
 import random
 import json
@@ -116,35 +117,55 @@ class Clustering():
         return ddata
     
     
-    def Scipy_Agglomerative(self, dist_m, link_m, path):
+    def Scipy_Agglomerative(self, dist_m, link_m, df, path):
         Z = linkage(self.x,method=link_m,metric=dist_m)
-        label_ans = fcluster(Z, t=int(self.k), criterion='maxclust')
-        fig, axes= plt.subplots(nrows=1, ncols=1,figsize=(30,15))
         
-        dn = self.__fancy_dendrogram(Z, 
-                        labels=label_ans, 
-                        ax=axes, 
-                        truncate_mode='lastp', 
-                        p=int(self.k), 
-                        orientation='top',
-                        get_leaves = True,
-                        annotate_above=10,
-                        show_leaf_counts = True,
-                        leaf_rotation = 90,
-                        leaf_font_size = 20
-                       )
-        
-        with open(path+"dendogram_lastp_"+str(self.k)+".json", 'w') as f:
-            json.dump(dn, f)
-        
-        plt.savefig(path+"dendrogram_lastp_"+str(self.k)+".png",format="png")
-        
-        #dn = dendrogram(Z, labels=label_ans, ax=axes, truncate_mode='level', p=i, orientation='top')
-        #plt.savefig(path+"dendrogram_level_"+str(i)+".png",format="png")
-        
-        plt.close()
-        
-        self.labels = label_ans
-        self.labels = [x - 1 for x in self.labels]
-        self.silhouetteAvg = silhouette_score(self.x, self.labels)
-        self.silhouetteValues = silhouette_samples(self.x, self.labels)
+        for cluster_k in range(self.k,9,-1):
+            new_path = path + str(cluster_k) + "\\"
+            
+            if os.path.isdir(new_path):
+                continue
+            
+            os.mkdir(new_path)
+            
+            copy_Z = copy.deepcopy(Z)
+            label_ans = fcluster(copy_Z, t=cluster_k, criterion='maxclust')
+            fig, axes= plt.subplots(nrows=1, ncols=1,figsize=(30,15))
+
+            dn = self.__fancy_dendrogram(Z, 
+                            labels=label_ans, 
+                            ax=axes, 
+                            truncate_mode='lastp', 
+                            p=cluster_k,
+                            orientation='top',
+                            get_leaves = True,
+                            annotate_above=10,
+                            show_leaf_counts = True,
+                            leaf_rotation = 90,
+                            leaf_font_size = 20
+                           )
+            '''
+            try:
+                with open(new_path+"dendogram_lastp_"+str(cluster_k)+".json", 'w') as f:
+                    json.dump(dn, f, default=convert)
+            except TypeError as e:
+                logging.error(new_path+"dendogram_lastp_"+str(cluster_k)+".json not created"+str(e))
+            '''
+            
+            plt.savefig(new_path+"dendrogram_lastp_"+str(cluster_k)+".png",format="png")
+
+            #dn = dendrogram(Z, labels=label_ans, ax=axes, truncate_mode='level', p=i, orientation='top')
+            #plt.savefig(path+"dendrogram_level_"+str(i)+".png",format="png")
+
+            plt.close('all')
+            
+            self.labels = label_ans
+            self.labels = [x - 1 for x in self.labels]
+            self.silhouetteAvg = silhouette_score(self.x, self.labels)
+            self.silhouetteValues = silhouette_samples(self.x, self.labels)
+
+            #Create CSV with Image, ClusterLabel and Silhouette value
+            image = pd.DataFrame({ 'FileName':df.FileName, 'ClusterLabel':self.labels, 'SilhouetteVal':self.silhouetteValues, 'T_No':df.T_No}) 
+            image.to_csv(new_path+"testInfo.csv",index = False)
+            
+            del copy_Z
